@@ -8,7 +8,7 @@
 #include "TankPlayerController.generated.h" // must be the last include
 
 /**
- * 
+ *
  */
 UCLASS()
 class BATTLE_TANK_GAME_API ATankPlayerController : public APlayerController
@@ -18,5 +18,5 @@ class BATTLE_TANK_GAME_API ATankPlayerController : public APlayerController
     
 public:
     ATank* GetControlledTank() const;
-	
+    void BeginPlay() override;
 };
