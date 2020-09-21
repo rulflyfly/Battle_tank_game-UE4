@@ -15,6 +15,9 @@ class BATTLE_TANK_GAME_API ATank : public APawn
 public:
     void AimAt(FVector HitLocation);
     
+    UFUNCTION(BlueprintCallable, Category = SetUp)
+    void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+    
 protected:
     UTankAimingComponent* TankAimingComponent = nullptr;
     
@@ -26,6 +29,9 @@ private:
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    
+    UPROPERTY(EditAnywhere, Category = Firing)
+    float LaunchSpeed = 100000; // Starting value of 1000 m/s; 
     
 
 protected:
