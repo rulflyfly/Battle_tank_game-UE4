@@ -4,6 +4,7 @@
 #include "TankBarrel.h"
 
 
+
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
@@ -43,7 +44,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
     if (!Barrel) { return; }
     FVector OutLaunchVelocity;
     FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-    UE_LOG(LogTemp, Warning, TEXT("Barrel %s"), *StartLocation.ToString());
+   // UE_LOG(LogTemp, Warning, TEXT("Barrel %s"), *StartLocation.ToString());
     
     
    if ( UGameplayStatics::SuggestProjectileVelocity(
@@ -51,11 +52,22 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
                                 OutLaunchVelocity,
                                 StartLocation,
                                 HitLocation,
-                                LaunchSpeed))
+                                LaunchSpeed,
+                                false,
+                                0,
+                                0,
+                                ESuggestProjVelocityTraceOption::DoNotTrace)) // Paramemer must be present to avoid bug
    {
+       auto Time = GetWorld()->GetTimeSeconds();
+       UE_LOG(LogTemp, Warning, TEXT("%f: Aim found"), Time);
        auto AimDirection = OutLaunchVelocity.GetSafeNormal();
        MoveBarrelTowards(AimDirection);
    }
+    else
+    {
+        auto Time = GetWorld()->GetTimeSeconds();
+        UE_LOG(LogTemp, Warning, TEXT("%f: NO AIM"), Time);
+    }
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
