@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
-#include "TankAimingComponent.h"
+
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -43,6 +43,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
     if (!Barrel) { return; }
     FVector OutLaunchVelocity;
     FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+    UE_LOG(LogTemp, Warning, TEXT("Barrel %s"), *StartLocation.ToString());
+    
     
    if ( UGameplayStatics::SuggestProjectileVelocity(
                                 this,

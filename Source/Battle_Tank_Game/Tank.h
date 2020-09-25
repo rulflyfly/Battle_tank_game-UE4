@@ -7,6 +7,8 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h" // has to be the lst included
 
+class UTankBarrel;
+
 UCLASS()
 class BATTLE_TANK_GAME_API ATank : public APawn
 {
