@@ -2,6 +2,7 @@
 #include "TankAimingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 
 
@@ -17,7 +18,14 @@ UTankAimingComponent::UTankAimingComponent()
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+    if (!BarrelToSet) { return; }
     Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+    if (!TurretToSet) { return; }
+    Turret = TurretToSet;
 }
 
 
@@ -59,14 +67,15 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
                                 ESuggestProjVelocityTraceOption::DoNotTrace)) // Paramemer must be present to avoid bug
    {
        auto Time = GetWorld()->GetTimeSeconds();
-       UE_LOG(LogTemp, Warning, TEXT("%f: Aim found"), Time);
+      // UE_LOG(LogTemp, Warning, TEXT("%f: Aim found"), Time);
        auto AimDirection = OutLaunchVelocity.GetSafeNormal();
        MoveBarrelTowards(AimDirection);
+       MoveTurretTowards(AimDirection);
    }
     else
     {
         auto Time = GetWorld()->GetTimeSeconds();
-        UE_LOG(LogTemp, Warning, TEXT("%f: NO AIM"), Time);
+       // UE_LOG(LogTemp, Warning, TEXT("%f: NO AIM"), Time);
     }
 }
 
@@ -80,8 +89,17 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
     
     // Move the barrel to the right amount this frame
     
-    Barrel->Elevate(5);
+    Barrel->Elevate(DeltaRotator.Pitch);
     
     // Given a max elevation speed and frame time
     return;
+}
+
+void UTankAimingComponent::MoveTurretTowards(FVector AimDirection)
+{
+    auto TurretRotator = Turret->GetForwardVector().Rotation();
+    auto AimAsRotator = AimDirection.Rotation();
+    auto DeltaRotator = AimAsRotator - TurretRotator;
+    
+    Turret->Rotate(DeltaRotator.Yaw);
 }
